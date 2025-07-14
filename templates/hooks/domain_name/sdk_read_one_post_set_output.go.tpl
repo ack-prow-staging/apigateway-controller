@@ -1,0 +1,1 @@
+ko.Spec.Tags = rm.getTags(ctx, *ko.Spec.DomainName)
