@@ -49,7 +49,7 @@ ignore:
     # - Deployment
     - DocumentationPart
     - DocumentationVersion
-    - DomainName
+    # - DomainName (removed from ignore list)
     - DomainNameAccessAssociation
     - Model
     - RequestValidator
@@ -427,3 +427,53 @@ resources:
       terminal_codes:
         - BadRequestException
         - InvalidParameter
+  DomainName:
+    fields:
+      DomainName:
+        is_primary_key: true
+        is_required: true
+        is_immutable: true
+      CertificateName:
+        is_immutable: true
+      CertificateArn:
+        is_immutable: true
+      EndpointConfiguration.Types:
+        is_immutable: true
+      RegionalCertificateArn:
+        is_immutable: true
+      SecurityPolicy:
+        is_immutable: true
+      MutualTlsAuthentication.TruststoreUri:
+        is_immutable: true
+      MutualTlsAuthentication.TruststoreVersion:
+        is_immutable: true
+    renames:
+      operations:
+        GetDomainName:
+          input_fields:
+            DomainName: DomainName
+        UpdateDomainName:
+          input_fields:
+            DomainName: DomainName
+        DeleteDomainName:
+          input_fields:
+            DomainName: DomainName
+    exceptions:
+      terminal_codes:
+        - BadRequestException
+        - ConflictException
+        - NotFoundException
+        - TooManyRequestsException
+        - UnauthorizedException
+    synced:
+      when:
+        - path: Status.DomainNameStatus
+          in:
+            - AVAILABLE
+    hooks:
+      sdk_create_post_set_output:
+        template_path: hooks/domain_name/sdk_create_post_set_output.go.tpl
+      sdk_update_pre_build_request:
+        template_path: hooks/domain_name/sdk_update_pre_build_request.go.tpl
+      sdk_read_one_post_set_output:
+        template_path: hooks/domain_name/sdk_read_one_post_set_output.go.tpl
